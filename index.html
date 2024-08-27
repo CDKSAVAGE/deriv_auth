@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,21 +16,23 @@
             document.write(`<p>Your token has been retrieved successfully.</p>`);
 
             // Create a POST request to send the token to the local server
-            fetch('https://derivauth1-c668af5f3eac.herokuapp.com/receive-token', {
+            fetch('http://localhost:8000/receive-token', {  // Update to match your local Flask server address and port
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ token: token })
             })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
                 console.log('Token sent to server successfully:', data);
-                document.write(`<p>Token has been sent to the bot successfully.</p>`);
+                console.log('Token:', token);
+                document.write(`<p>Token has been sent to the server successfully.</p>`);
+                document.write(`<p>Token: ${token}</p>`);
             })
             .catch((error) => {
                 console.error('Error sending token to server:', error);
-                document.write(`<p>Error sending token to bot. Please try again.</p>`);
+                document.write(`<p>Error sending token to server. Please try again.</p>`);
             });
         } else {
             document.write(`<p>Token not found in URL.</p>`);
@@ -39,4 +40,3 @@
     </script>
 </body>
 </html>
-
