@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Data Processing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .data {
+            margin-top: 20px;
+        }
+        .data div {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Data Received</h1>
+        <div class="data">
+            <div><strong>Account 1:</strong> <span id="acct1"></span></div>
+            <div><strong>Token 1:</strong> <span id="token1"></span></div>
+            <div><strong>Currency 1:</strong> <span id="cur1"></span></div>
+            <div><strong>Account 2:</strong> <span id="acct2"></span></div>
+            <div><strong>Token 2:</strong> <span id="token2"></span></div>
+            <div><strong>Currency 2:</strong> <span id="cur2"></span></div>
+            <div><strong>Language:</strong> <span id="lang"></span></div>
+        </div>
+        <div class="actions">
+            <button onclick="processData()">Process Data</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to get query parameters from the URL
+        function getQueryParams() {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            return {
+                code: urlParams.get('code'),
+                acct1: urlParams.get('acct1'),
+                token1: urlParams.get('token1'),
+                cur1: urlParams.get('cur1'),
+                acct2: urlParams.get('acct2'),
+                token2: urlParams.get('token2'),
+                cur2: urlParams.get('cur2'),
+                lang: urlParams.get('lang')
+            };
+        }
+
+        // Function to display user data
+        function displayData() {
+            const params = getQueryParams();
+            document.getElementById('acct1').textContent = params.acct1 || 'N/A';
+            document.getElementById('token1').textContent = params.token1 || 'N/A';
+            document.getElementById('cur1').textContent = params.cur1 || 'N/A';
+            document.getElementById('acct2').textContent = params.acct2 || 'N/A';
+            document.getElementById('token2').textContent = params.token2 || 'N/A';
+            document.getElementById('cur2').textContent = params.cur2 || 'N/A';
+            document.getElementById('lang').textContent = params.lang || 'N/A';
+        }
+
+        // Function to send data to the backend
+        function processData() {
+            const params = getQueryParams();
+            fetch('http://localhost:5000/process_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(params)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Server response: ' + data.message);
+                console.log('User data:', data.user_data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Display user data when the page loads
+        window.onload = displayData;
+    </script>
+</body>
+</html>
